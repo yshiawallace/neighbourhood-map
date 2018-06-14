@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>New Orleans Vegan Food Map</title>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:400,700" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+	<header>
+		<div class="header">
+			<div class="container group">
+				<h1 class="header__title"><span>Vegan Restaurants in New Orleans</span></h1>
+				<nav>
+					<div class="nav">
+						<div class="nav__icn">
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+	</header>
+	<main>
+		<aside>
+			<div class="sidebar">
+				<h2 class="search__title">Search List</h2>
+				<div class="search__input__container">
+					<input class="search__input" type="text" placeholder="Search restaurant names" data-bind="value: locationSearch, valueUpdate: 'afterkeydown'">
+					<span class="search__input__close" data-bind="click: clearInputField"></span>
+				</div>
+				<ul class="search__list" data-bind="foreach: filteredLocations">
+					<li class="search__list__item">
+						<a href="#" data-bind="text: name, click: $parent.openInfoWindow"></a>
+					</li>
+				</ul>	
+			</div>
+		</aside>
+		<section>
+			<header>
+				<h2 class="screen-reader-text">Map of New Orleans</h2>
+			</header>
+			<div id="map"></div>
+		</section>
+	</main>
+	<footer>
+		<div class="footer">
+			<p>Site by Yshia Wallace</p>
+		</div>
+	</footer>
+    <script src="js/lib/jquery-3.3.1.min.js" type="text/javascript"></script>
+	<script src="js/lib/knockout-3.4.2.js" type="text/javascript"></script>
+	<script src="js/data.js" type="text/javascript"></script>
+	<script src="js/app.js" type="text/javascript"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcVibBgcqaXotS0xCEdp8iz5icI-qCmaA&v=3&callback=initMap"
+    async defer></script>
+</body>
+</html>
