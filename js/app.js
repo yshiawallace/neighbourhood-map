@@ -115,11 +115,11 @@ navIcon.on('click', toggleMobileMenu);
 function Location(data) {
 	var self = this;
 
-	this.name = data.name;
-	this.recommender = data.recommender;
-	this.isFiltered = ko.observable(false);
+	self.name = data.name;
+	self.recommender = data.recommender;
+	self.isFiltered = ko.observable(false);
 
-	this.marker = new google.maps.Marker({
+	self.marker = new google.maps.Marker({
 		map: map,
 		position: data.geolocation,
 		title: data.name,
@@ -128,7 +128,7 @@ function Location(data) {
 		lng: data.geolocation.lng
 	});
 
-	this.marker.addListener('click', function() {
+	self.marker.addListener('click', function() {
 		self.marker.setAnimation(google.maps.Animation.BOUNCE);
     	setTimeout(function(){ self.marker.setAnimation(null); }, 750);
 		populateInfoWindow(this, self.recommender, largeInfowindow);
@@ -143,10 +143,10 @@ var ViewModel = function() {
 	var self = this;
 
 	// Create observable array for the location filter input field
-	this.locationSearch = ko.observable('');
+	self.locationSearch = ko.observable('');
 
 	// Create observable array for locations
-	this.locationsList = ko.observableArray([]);
+	self.locationsList = ko.observableArray([]);
 
 	// Push all the initial locations from data.js to the locationsList observableArray
 	locations.forEach(function(location) {
@@ -154,7 +154,7 @@ var ViewModel = function() {
 	});
 
 	// Filter locations based on text input results
-	this.filteredLocations = ko.computed(function() {
+	self.filteredLocations = ko.computed(function() {
 		var searchTerm = self.locationSearch().toLowerCase();
 		// Only show locations that include the search input value
 		if (searchTerm) {
@@ -186,12 +186,12 @@ var ViewModel = function() {
 
 	// Trigger the infowindow to open when you click on it's list item
 	// Reference: https://stackoverflow.com/questions/2730929/how-to-trigger-the-onclick-event-of-a-marker-on-a-google-maps-v3
-	this.openInfoWindow = function(location) {
+	self.openInfoWindow = function(location) {
 		google.maps.event.trigger(location.marker, 'click');
 	};
 
 	// 
-	this.clearInputField = function() {
-		this.locationSearch('');
+	self.clearInputField = function() {
+		self.locationSearch('');
 	};
 };
