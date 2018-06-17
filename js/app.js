@@ -29,32 +29,42 @@ function populateInfoWindow(marker, recommender, infowindow) {
 	var client_secret = "GNNZHIBVMIDNBX5RJLUKHZAJ51DHCUVWN4DX0U0BPNQSKVI2";
 	var venueName = marker.title;
 	var formattedVenueName = venueName.split(' ').join('+');
-
 	var foursquareApiRequest = "https://api.foursquare.com/v2/venues/explore?v=20170801&client_id=" + client_id +
 	"&client_secret=" + client_secret + "&ll=" + marker.lat + ',' + marker.lng + "&query=" + formattedVenueName;
+	var venueId;
+	var foursquareVenueRequest;
+	var venueData;
+	var address;
+	var city;
+	var state;
+	var postalCode;
+	var website;
+	var photos;
+	var photoPrefix;
+	var photoSufix;
+	var contentString = '';
 	
 	// Reference: https://davidwalsh.name/write-javascript-promises
 	// Make initial API request to retrieve the Foursquare venue ID
 	// which is needed to make a venue details request
 	$.getJSON(foursquareApiRequest).done(function(data) {
-		var venueId = data.response.groups[0].items[0].venue.id;
-		var foursquareVenueRequest = "https://api.foursquare.com/v2/venues/" + venueId +
+		venueId = data.response.groups[0].items[0].venue.id;
+		foursquareVenueRequest = "https://api.foursquare.com/v2/venues/" + venueId +
 			"?v=20170801&client_id=" + client_id +
 			"&client_secret=" + client_secret;
 
 		// Make venue details request to retrieve address, website, and photo for the infowindow
 		$.getJSON(foursquareVenueRequest).done(function(data) {
-			var venueData = data.response.venue;
-			var address = venueData.location.address;
-			var city = venueData.location.city;
-			var state = venueData.location.state;
-			var postalCode = venueData.location.postalCode;
-			var website = venueData.url;
-			var photos = venueData.photos.groups;
+			venueData = data.response.venue;
+			address = venueData.location.address;
+			city = venueData.location.city;
+			state = venueData.location.state;
+			postalCode = venueData.location.postalCode;
+			website = venueData.url;
+			photos = venueData.photos.groups;
 
 			// Output the content for the input window
 			function buildContentString() {
-				var contentString = '';
 				contentString += '<h3 class="venue-title">' + venueName + '</h3>';
 				contentString += '<p class="venue-address">' + address + '<br>' + city + ', ' + state + ' ' + postalCode + '</p>';
 				if (recommender) {
@@ -64,8 +74,8 @@ function populateInfoWindow(marker, recommender, infowindow) {
 					contentString += '<a class="venue-website" href="' + website + '" target="_blank">' + website + '</a>';
 				}
 				if (typeof photos !== 'undefined' && photos.length > 0) {
-					var photoPrefix = photos[0].items[0].prefix;
-					var photoSufix = photos[0].items[0].suffix;
+					photoPrefix = photos[0].items[0].prefix;
+					photoSufix = photos[0].items[0].suffix;
 					contentString += '<img class="venue-img" src="' + photoPrefix + '150x150'+ photoSufix +'">';
 				}
 				return contentString;
