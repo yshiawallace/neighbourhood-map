@@ -3,6 +3,11 @@ var map,
 	bounds,
 	largeInfowindow;
 
+// Handle Google Map errors gracefully
+function googleMapError() {
+	alert("Sorry, Google Maps was unable to load. Please refresh your browser and try again.")
+}
+
 // Initialize the Google map
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
