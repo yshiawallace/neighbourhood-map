@@ -23,7 +23,6 @@ function populateInfoWindow(marker, recommender, infowindow) {
 	var client_id = "4RMAEP0EFWK4HZP3DNANSDPSKZK3JPZOUQVPZCNSOTAQRLVG";
 	var client_secret = "GNNZHIBVMIDNBX5RJLUKHZAJ51DHCUVWN4DX0U0BPNQSKVI2";
 	var venueName = marker.title;
-	var recommender = recommender;
 	var formattedVenueName = venueName.split(' ').join('+');
 
 	var foursquareApiRequest = "https://api.foursquare.com/v2/venues/explore?v=20170801&client_id=" + client_id +
@@ -48,27 +47,26 @@ function populateInfoWindow(marker, recommender, infowindow) {
 			var website = venueData.url;
 			var photos = venueData.photos.groups;
 
-			if (infowindow.marker != marker) {
-
-				// Output the content for the input window
-				function buildContentString() {
-					var contentString = '';
-					contentString += '<h3 class="venue-title">' + venueName + '</h3>';
-					contentString += '<p class="venue-address">' + address + '<br>' + city + ', ' + state + ' ' + postalCode + '</p>';
-					if (recommender) {
-						contentString += '<p class="venue-recommender">Recommended by: <strong>' + recommender + '</strong></p>';
-					}
-					if (website) {
-						contentString += '<a class="venue-website" href="' + website + '" target="_blank">' + website + '</a>';
-					}
-					if (typeof photos !== 'undefined' && photos.length > 0) {
-						var photoPrefix = photos[0].items[0].prefix;
-						var photoSufix = photos[0].items[0].suffix;
-						contentString += '<img class="venue-img" src="' + photoPrefix + '150x150'+ photoSufix +'">';
-					}
-					return contentString;
+			// Output the content for the input window
+			function buildContentString() {
+				var contentString = '';
+				contentString += '<h3 class="venue-title">' + venueName + '</h3>';
+				contentString += '<p class="venue-address">' + address + '<br>' + city + ', ' + state + ' ' + postalCode + '</p>';
+				if (recommender) {
+					contentString += '<p class="venue-recommender">Recommended by: <strong>' + recommender + '</strong></p>';
 				}
+				if (website) {
+					contentString += '<a class="venue-website" href="' + website + '" target="_blank">' + website + '</a>';
+				}
+				if (typeof photos !== 'undefined' && photos.length > 0) {
+					var photoPrefix = photos[0].items[0].prefix;
+					var photoSufix = photos[0].items[0].suffix;
+					contentString += '<img class="venue-img" src="' + photoPrefix + '150x150'+ photoSufix +'">';
+				}
+				return contentString;
+			}
 
+			if (infowindow.marker != marker) {
 				infowindow.marker = marker;
 				infowindow.setContent(buildContentString());
 				infowindow.open(map, marker);
@@ -175,10 +173,10 @@ var ViewModel = function() {
 	// Reference: https://stackoverflow.com/questions/2730929/how-to-trigger-the-onclick-event-of-a-marker-on-a-google-maps-v3
 	this.openInfoWindow = function(location) {
 		google.maps.event.trigger(location.marker, 'click');
-	}
+	};
 
 	// 
 	this.clearInputField = function() {
 		this.locationSearch('');
-	}
-}
+	};
+};
