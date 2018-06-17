@@ -76,10 +76,10 @@ function populateInfoWindow(marker, recommender, infowindow) {
 				});
 			}
 		}).fail(function() {
-			console.log('Your Foursquare API request failed.');
+			alert('Fourquare cannot complete the request at this time. Please try again.');
 		});
 	}).fail(function() {
-		console.log('Your Foursquare API request failed.');
+		alert('Fourquare cannot complete the request at this time. Please try again.');
 	});
 }
 
