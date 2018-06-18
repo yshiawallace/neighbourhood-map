@@ -42,7 +42,35 @@ function populateInfoWindow(marker, recommender, infowindow) {
 	var photos;
 	var photoPrefix;
 	var photoSufix;
-	var contentString = '';
+	var contentString = 'Foursquare info is loading...';
+
+	if (infowindow.marker != marker) {
+		infowindow.marker = marker;
+		infowindow.setContent(contentString);
+		infowindow.open(map, marker);
+		// Make sure the marker property is cleared if the infowindow is closed.
+		infowindow.addListener('closeclick',function(){
+			infowindow.setMarker = null;
+		});
+	}
+
+	// Output the content for the input window
+	function buildContentString() {
+		contentString += '<h3 class="venue-title">' + venueName + '</h3>';
+		contentString += '<p class="venue-address">' + address + '<br>' + city + ', ' + state + ' ' + postalCode + '</p>';
+		if (recommender) {
+			contentString += '<p class="venue-recommender">Recommended by: <strong>' + recommender + '</strong></p>';
+		}
+		if (website) {
+			contentString += '<a class="venue-website" href="' + website + '" target="_blank">' + website + '</a>';
+		}
+		if (typeof photos !== 'undefined' && photos.length > 0) {
+			photoPrefix = photos[0].items[0].prefix;
+			photoSufix = photos[0].items[0].suffix;
+			contentString += '<img class="venue-img" src="' + photoPrefix + '150x150'+ photoSufix +'">';
+		}
+		return contentString;
+	}		
 	
 	// Reference: https://davidwalsh.name/write-javascript-promises
 	// Make initial API request to retrieve the Foursquare venue ID
@@ -63,33 +91,11 @@ function populateInfoWindow(marker, recommender, infowindow) {
 			website = venueData.url;
 			photos = venueData.photos.groups;
 
-			// Output the content for the input window
-			function buildContentString() {
-				contentString += '<h3 class="venue-title">' + venueName + '</h3>';
-				contentString += '<p class="venue-address">' + address + '<br>' + city + ', ' + state + ' ' + postalCode + '</p>';
-				if (recommender) {
-					contentString += '<p class="venue-recommender">Recommended by: <strong>' + recommender + '</strong></p>';
-				}
-				if (website) {
-					contentString += '<a class="venue-website" href="' + website + '" target="_blank">' + website + '</a>';
-				}
-				if (typeof photos !== 'undefined' && photos.length > 0) {
-					photoPrefix = photos[0].items[0].prefix;
-					photoSufix = photos[0].items[0].suffix;
-					contentString += '<img class="venue-img" src="' + photoPrefix + '150x150'+ photoSufix +'">';
-				}
-				return contentString;
-			}
+			// Clear content string before populating with Foursquare data
+			contentString = '';
+			// Set content of infowindow with content form Foursquare
+			infowindow.setContent(buildContentString());
 
-			if (infowindow.marker != marker) {
-				infowindow.marker = marker;
-				infowindow.setContent(buildContentString());
-				infowindow.open(map, marker);
-				// Make sure the marker property is cleared if the infowindow is closed.
-				infowindow.addListener('closeclick',function(){
-					infowindow.setMarker = null;
-				});
-			}
 		}).fail(function() {
 			alert('Fourquare cannot complete the request at this time. Please try again.');
 		});
